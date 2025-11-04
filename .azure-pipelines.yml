@@ -23,7 +23,7 @@ stages:
           inputs:
             command: "buildAndPush"
             repository: "vedangj044/recitation3fastapi:latest"
-            dockerfile: "**/Dockerfile"
+            dockerfile: "Dockerfile"
             tags: |
               latest
             containerRegistry: "dockerhub"
