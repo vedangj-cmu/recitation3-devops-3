@@ -37,6 +37,7 @@ stages:
       environment: 
         name: "fastapi"
         tags: "dev"
+        resourceType: virtualMachine
       strategy:
         runOnce:
           deploy:
@@ -61,6 +62,7 @@ stages:
       environment: 
         name: "fastapi"
         tags: "prod"
+        resourceType: virtualMachine
       strategy:
         runOnce:
           deploy:
