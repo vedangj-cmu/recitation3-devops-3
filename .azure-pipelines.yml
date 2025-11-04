@@ -1,0 +1,26 @@
+trigger:
+  - main
+
+pool:
+  name: "Azure Pipelines"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndTest
+        steps:
+          - task: Checkout@1
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+              pytest -v
+            displayName: "Run Unit Tests"
+
+          - task: Docker@2
+            inputs:
+              command: "buildAndPush"
+              repository: "vedangj044/recitation3fastapi:latest"
+              dockerfile: "**/Dockerfile"
+              tags: |
+                latest
+              containerRegistry: "dockerhub-service-connection"
