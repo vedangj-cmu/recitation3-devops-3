@@ -27,3 +27,40 @@ stages:
             tags: |
               latest
             containerRegistry: "dockerhub"
+
+  - stage: DeployDev
+    displayName: "Deploy to Dev Environment"
+    dependsOn: Build
+    jobs:
+    - deployment: DeployDev
+      displayName: "Deploy to Dev VM"
+      environment: "fastapi"
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: |
+                docker pull vedangj044/recitation3fastapi:latest
+                docker stop fastapi-dev || true
+                docker rm fastapi-dev || true
+                docker run -d -p 80:8000 --name fastapi-dev vedangj044/recitation3fastapi:latest
+              displayName: "Run FastAPI Container on Dev VM"
+
+  - stage: DeployProd
+    displayName: "Deploy to Prod Environment"
+    dependsOn: DeployDev
+    condition: succeeded()
+    jobs:
+    - deployment: DeployProd
+      displayName: "Deploy to Prod VM"
+      environment: "fastapi"
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: |
+                docker pull vedangj044/recitation3fastapi:latest
+                docker stop fastapi-prod || true
+                docker rm fastapi-prod || true
+                docker run -d -p 80:8000 --name fastapi-prod vedangj044/recitation3fastapi:latest
+              displayName: "Run FastAPI Container on Prod VM"
